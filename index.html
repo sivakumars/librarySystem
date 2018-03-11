@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Library system</title>
+</head>
+<body>
+	<script type="text/javascript" src="tinytest.js"></script>
+	<script type="text/javascript" src="librarySystem.js"></script>
+	<script type="text/javascript">		
+		//test cases
+	tests({
+		//case0: Test the librarySystem API, if it exists in the window Object
+		'Is the librarySystem API , a property in the window Object' : function(){
+			eq(!!librarySystem, true);
+		},
+		//case1: Test the librarySystem API, if it is invoked with no parameters, returns the library store Object
+		'Library system API returns undefined when invoked without any parameters' : function(){
+			eq(librarySystem(), undefined);
+		},
+		//case2: Test the librarySystem API, if it is invoked with a name of a library module , empty dependecies array parameter a callback to store the library module.
+		'LibrarySystem returns a library module from the library store when invoked with the library name' : function(){
+			librarySystem('test library', [], function(){
+				return 'test library module';
+			});
+			eq(librarySystem('test library'), 'test library module');
+		},
+		//case3: library with dependencies which are in libraryStore,
+			    //The libraryStore should be updated with the return value(library module) of the callback function
+			    //The library dependency map should have no object related to this name(module)
+		'LibrarySystem should get the library module if its dependencies are stored in order' : function(){
+			librarySystem('school', [], function() {
+			  return 'Watch and Code';
+			});
+
+			librarySystem('name', [], function() {
+			  return 'Siva';
+			});
+
+			librarySystem('studyBlurb', ['name', 'school'], function(name, school) {
+			  return name + ' studies at ' + school;
+			});
+
+			eq(librarySystem('studyBlurb'), 'Siva studies at Watch and Code');
+		}		
+	});
+	</script>
+</body>
+</html>
